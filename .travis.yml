@@ -11,13 +11,18 @@ compiler:
 dist: trusty
 
 env:
- - QT=5  BREW=5
- - QT=5  BREW=ex PPA=ubuntu-sdk-team/ppa
- - QT=53 BREW=ex PPA=beineri/opt-qt532-trusty
- - QT=54 BREW=ex PPA=beineri/opt-qt542-trusty
- - QT=55 BREW=55 PPA=beineri/opt-qt551-trusty
- - QT=56 BREW=5  PPA=beineri/opt-qt562-trusty
- - QT=57 BREW=ex PPA=beineri/opt-qt57-trusty
+  global:
+   # The next declaration is the encrypted COVERITY_SCAN_TOKEN, created
+   #   via the "travis encrypt" command using the project repo's public key
+   - secure: "P6rbZx8geH++qggRmVLzrfS4LLOh8+0TIggsRqqufl2IumdlmPA6qMl23VNRW4jsiyV36OmhyTkjoNQmWeAe+9cq5vx9SqoEX68lzbER7KST9KOQ1tHN8UmaLZKN0UJELkdmt0zzSQSnpNgo0+yri1uxpR7tvzyTB+DVctYFFo8HkfuTX8S8l4XDBxj4SWqIfXPEhwYB75cN8FcM3yazeDM/rGsUvgLfJC4mcY4YWq7Psh9X3T9CcKl5gWvF8o6p111UnejJsk9BHIMXn1ed9dyTqZXxlG69PZ3WyDCVZHQfNUl8pY/pHB08Xb73ZsNKdfQW/jFZb/hogGLkG3SI2LNZiI6Pw/1AGXYGMCOvmTr7iVS6OOybLT92rxYenkQE7Q8nw9VGzFUKhkJk2WD/Fhr4WX/gee+wj6efvWMimo4pjOtHAnlWeQi54IWRs8SHBBs/u4dY3dGkhmNaoE6R1tw3e1SJISS//KBZNYlhoVu+d3hdywvknPyYGZSF8TTpWLyB2fZYjsEUD9whJz0YEzIIeiuMxfAGK0ARNcr0gwtg0ONV1Tyj1nIkZx9fv4FZbPxVxF29xHhmJBXxL3wbxqQvn54UujhgDIaK1Qmqi/c17yBUVcKmZxtx3SUYKUu3VjDYa9fJ/oZXyexYjoU9L+LRCT3Py1w6Fy2myrYjzXU="
+  matrix:
+   - QT=5  BREW=5
+   - QT=5  BREW=ex PPA=ubuntu-sdk-team/ppa
+   - QT=53 BREW=ex PPA=beineri/opt-qt532-trusty
+   - QT=54 BREW=ex PPA=beineri/opt-qt542-trusty
+   - QT=55 BREW=55 PPA=beineri/opt-qt551-trusty
+   - QT=56 BREW=5  PPA=beineri/opt-qt562-trusty
+   - QT=57 BREW=ex PPA=beineri/opt-qt57-trusty
 
 matrix:
  exclude:
@@ -29,6 +34,19 @@ matrix:
   - { os: osx, env: QT=57 BREW=ex PPA=beineri/opt-qt57-trusty  }
   - { os: osx, compiler: gcc, env: QT=5  BREW=5 } # Qt 5.6 no longer supports gcc on OS X.
   - { os: osx, compiler: gcc, env: QT=56 BREW=5  PPA=beineri/opt-qt561-trusty } # Qt 5.6 no longer supports gcc on OS X.
+
+addons:
+  coverity_scan:
+    project:
+      name: "hephooey/qterm"
+      description: "BBS client based on Qt"
+    notification_email: hephooey@gmail.com
+    build_command_prepend: >
+      cp -a "$TRAVIS_BUILD_DIR" "$TRAVIS_BUILD_DIR-scan" &&
+      pushd "$TRAVIS_BUILD_DIR-scan" &&
+      cmake . -DQT5=Yes
+    build_command: make
+    branch_pattern: coverity
 
 before_install:
  - '[[ "$TRAVIS_OS_NAME" != linux || -z "$PPA" ]] || sudo add-apt-repository -y ppa:$PPA'
