@@ -18,9 +18,6 @@ env:
   matrix:
    - QT=5  BREW=5
    - QT=5  BREW=ex PPA=ubuntu-sdk-team/ppa
-   - QT=53 BREW=ex PPA=beineri/opt-qt532-trusty
-   - QT=54 BREW=ex PPA=beineri/opt-qt542-trusty
-   - QT=55 BREW=55 PPA=beineri/opt-qt551-trusty
    - QT=56 BREW=5  PPA=beineri/opt-qt562-trusty
    - QT=57 BREW=ex PPA=beineri/opt-qt57-trusty
 
@@ -44,8 +41,8 @@ addons:
     build_command_prepend: >
       cp -a "$TRAVIS_BUILD_DIR" "$TRAVIS_BUILD_DIR-scan" &&
       pushd "$TRAVIS_BUILD_DIR-scan" &&
-      cmake . -DQT5=Yes
-    build_command: make
+      cmake . -DQT5=Yes -DQTERM_ENABLE_SCRIPT_DEBUGGER=On
+    build_command: make VERBOSE=1
     branch_pattern: coverity
 
 before_install:
