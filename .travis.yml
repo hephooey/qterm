@@ -8,30 +8,28 @@ compiler:
  - gcc
  - clang
 
-dist: trusty
+dist: xenial
 
 env:
  - QT=5  BREW=5
- - QT=56 BREW=5  PPA=beineri/opt-qt562-trusty
- - QT=57 BREW=ex PPA=beineri/opt-qt571-trusty
- - QT=58 BREW=ex   PPA=beineri/opt-qt58-trusty
- - QT=59 BREW=ex   PPA=beineri/opt-qt593-trusty
- - QT=510 BREW=@ex PPA=beineri/opt-qt-5.10.1-trusty
+ - QT=59 PPA=beineri/opt-qt597-xenial
+ - QT=510 PPA=beineri/opt-qt-5.10.1-xenial
+ - QT=511 PPA=beineri/opt-qt-5.11.3-xenial
+ - QT=512 PPA=beineri/opt-qt-5.12.3-xenial
 
 matrix:
  exclude:
   - { os: linux, env: QT=5  BREW=5 }
-  - { os: osx, env: QT=57 BREW=ex PPA=beineri/opt-qt571-trusty }
-  - { os: osx, compiler: gcc, env: QT=5  BREW=5 } # Qt 5.6 no longer supports gcc on OS X.
-  - { os: osx, compiler: gcc, env: QT=56 BREW=5  PPA=beineri/opt-qt561-trusty } # Qt 5.6 no longer supports gcc on OS X.
-  - { os: osx, env: QT=57 BREW=ex   PPA=beineri/opt-qt571-trusty }
-  - { os: osx, env: QT=58 BREW=ex   PPA=beineri/opt-qt58-trusty  }
-  - { os: osx, env: QT=59 BREW=ex   PPA=beineri/opt-qt593-trusty }
-  - { os: osx, env: QT=510 BREW=@ex PPA=beineri/opt-qt-5.10.1-trusty }
+  - { os: osx, env: QT=59 PPA=beineri/opt-qt597-xenial }
+  - { os: osx, env: QT=510 PPA=beineri/opt-qt-5.10.1-xenial }
+  - { os: osx, env: QT=511 PPA=beineri/opt-qt-5.11.3-xenial }
+  - { os: osx, env: QT=512 PPA=beineri/opt-qt-5.12.3-xenial }
+  - { os: osx, compiler: gcc } # Qt 5.6 no longer supports gcc on OS X.
 
 before_install:
  - '[[ "$TRAVIS_OS_NAME" != linux || -z "$PPA" ]] || sudo add-apt-repository -y ppa:$PPA'
  - '[ "$TRAVIS_OS_NAME" != linux ] || sudo apt-get -qy update'
+ - '[ "$TRAVIS_OS_NAME" != linux ] || sudo apt-get -y install libgl1-mesa-dev'
  - '[ "$TRAVIS_OS_NAME" != osx ] || brew update'
 
 install:
@@ -59,5 +57,5 @@ deploy:
   file_glob: true
   file: $TRAVIS_BUILD_DIR-build/QTerm-*-Darwin.dmg
   on:
-    condition: '"$TRAVIS_OS_NAME" == osx && "$CXX" == clang++ && "$QT" == 56'
+    condition: '"$TRAVIS_OS_NAME" == osx && "$CXX" == clang++ && "$QT" == 512'
     tags: true
