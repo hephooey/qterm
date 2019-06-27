@@ -3,56 +3,46 @@ image: Visual Studio 2015
 
 environment:
  matrix:
-  - QTDIR: C:\Qt\5.6\mingw49_32
-    MINGWDIR: C:\Qt\Tools\mingw492_32
-    CMAKE_GENERATOR: "MinGW Makefiles"
-  - QTDIR: C:\Qt\5.6\msvc2013
-    CMAKE_GENERATOR: "NMake Makefiles"
-  - QTDIR: C:\Qt\5.6\msvc2013_64
-    CMAKE_GENERATOR: "NMake Makefiles"
-  - QTDIR: C:\Qt\5.6\msvc2015
-    CMAKE_GENERATOR: "NMake Makefiles"
-  - QTDIR: C:\Qt\5.6\msvc2015_64
-    CMAKE_GENERATOR: "NMake Makefiles"
-  - QTDIR: C:\Qt\5.7\msvc2015
-    CMAKE_GENERATOR: "NMake Makefiles"
-  - QTDIR: C:\Qt\5.9\mingw53_32
-    MINGWDIR: C:\Qt\Tools\mingw530_32
-    CMAKE_GENERATOR: "MinGW Makefiles"
   - QTDIR: C:\Qt\5.9\msvc2015
-    CMAKE_GENERATOR: "NMake Makefiles"
-  - QTDIR: C:\Qt\5.9\msvc2013_64
     CMAKE_GENERATOR: "NMake Makefiles"
   - QTDIR: C:\Qt\5.9\msvc2015_64
     CMAKE_GENERATOR: "NMake Makefiles"
-  - QTDIR: C:\Qt\5.10\mingw53_32
-    MINGWDIR: C:\Qt\Tools\mingw530_32
-    CMAKE_GENERATOR: "MinGW Makefiles"
   - QTDIR: C:\Qt\5.10\msvc2015
-    CMAKE_GENERATOR: "NMake Makefiles"
-  - QTDIR: C:\Qt\5.10\msvc2013_64
     CMAKE_GENERATOR: "NMake Makefiles"
   - QTDIR: C:\Qt\5.10\msvc2015_64
     CMAKE_GENERATOR: "NMake Makefiles"
-  - QTDIR: C:\Qt\5.11\mingw53_32
-    MINGWDIR: C:\Qt\Tools\mingw530_32
-    CMAKE_GENERATOR: "MinGW Makefiles"
   - QTDIR: C:\Qt\5.11\msvc2015
     CMAKE_GENERATOR: "NMake Makefiles"
   - QTDIR: C:\Qt\5.11\msvc2015_64
+    CMAKE_GENERATOR: "NMake Makefiles"
+  - QTDIR: C:\Qt\5.12\msvc2015_64
+    CMAKE_GENERATOR: "NMake Makefiles"
+  - APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2017
+    QTDIR: C:\Qt\5.12\msvc2017
+    CMAKE_GENERATOR: "NMake Makefiles"
+  - APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2017
+    QTDIR: C:\Qt\5.12\msvc2017_64
     CMAKE_GENERATOR: "NMake Makefiles"
 
 install:
  - set PATH=%QTDIR%\bin;%MINGWDIR%\bin;%PATH%
  - qmake -v
- - if %QTDIR:_64=%==%QTDIR% ( set ARCH=x86 ) else set ARCH=x64
  - if %QTDIR:_64=%==%QTDIR% ( set OPENSSL_ROOT_DIR=C:\OpenSSL-Win32 ) else set OPENSSL_ROOT_DIR=C:\OpenSSL-Win64
  - if %QTDIR:msvc=%==%QTDIR% g++ --version
  - if %QTDIR:msvc=%==%QTDIR% set make=mingw32-make.exe
  - if %QTDIR:msvc=%==%QTDIR% set PATH=%QTDIR%\bin;%MINGWDIR%\bin;C:\Program Files (x86)\CMake\bin
  - if %QTDIR:msvc=%==%QTDIR% %make% --version
- - if not %QTDIR:msvc2013=%==%QTDIR% call "%ProgramFiles(x86)%\Microsoft Visual Studio 12.0\VC\vcvarsall.bat" %ARCH%
- - if not %QTDIR:msvc2015=%==%QTDIR% call "%ProgramFiles(x86)%\Microsoft Visual Studio 14.0\VC\vcvarsall.bat" %ARCH%
+ - if not %QTDIR:msvc2015=%==%QTDIR% (
+       if not %QTDIR:_64=%==%QTDIR% (
+           call "%ProgramFiles%\Microsoft SDKs\Windows\v7.1\Bin\SetEnv.cmd" /x64 &&
+           call "%ProgramFiles(x86)%\Microsoft Visual Studio 14.0\VC\vcvarsall.bat" x86_amd64
+       ) else call "%ProgramFiles(x86)%\Microsoft Visual Studio 14.0\VC\vcvarsall.bat" x86
+   )
+ - if not %QTDIR:msvc2017=%==%QTDIR% (
+       if not %QTDIR:_64=%==%QTDIR% (
+           call "%ProgramFiles(x86)%\Microsoft Visual Studio\2017\Community\VC\Auxiliary\Build\vcvars64.bat"
+       ) else call "%ProgramFiles(x86)%\Microsoft Visual Studio\2017\Community\VC\Auxiliary\Build\vcvars32.bat"
+   )
  - if not %QTDIR:msvc=%==%QTDIR% set make=nmake.exe
  - if not %QTDIR:msvc=%==%QTDIR% %make% /? > nul
 
@@ -75,11 +65,11 @@ deploy:
       secure: wc0cFfZSLHWbW3W8FKqgVPHQfF0bV1l54wkpLcpsq4EuBliQdwfV+4JLnWuHBdr4
     on:
       appveyor_repo_tag: true
-      QTDIR: C:\Qt\5.11\msvc2015_64
+      QTDIR: C:\Qt\5.12\msvc2017_64
   - provider: GitHub
     artifact: Win32Installer
     auth_token:
       secure: wc0cFfZSLHWbW3W8FKqgVPHQfF0bV1l54wkpLcpsq4EuBliQdwfV+4JLnWuHBdr4
     on:
       appveyor_repo_tag: true
-      QTDIR: C:\Qt\5.11\msvc2015
+      QTDIR: C:\Qt\5.12\msvc2017
