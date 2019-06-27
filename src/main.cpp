@@ -19,6 +19,8 @@ AUTHOR:        kingson fiasco
 #include "qterm.h"
 
 #include <QtGlobal>
+#include <QVersionNumber>
+#include <QLibraryInfo>
 #include <QApplication>
 
 #if !defined(_OS_WIN32_) && !defined(Q_OS_WIN32)
@@ -116,7 +118,8 @@ using namespace QTerm;
 
 int main( int argc, char ** argv )
 {
-    if ( strcmp( qVersion(), QT_MIN_VERSION ) < 0 ) {
+    QVersionNumber minVer = QVersionNumber::fromString(QT_MIN_VERSION);
+    if ( minVer > QLibraryInfo::version() ) {
         qFatal("QTerm requires Qt %s or above to run! Qt installed in your system is %s.", QT_MIN_VERSION, qVersion());
     }
     //QApplication::setGraphicsSystem("raster");
