@@ -47,6 +47,12 @@ if(QTERM_ENABLE_SSH)
       ssh/transport.cpp)
    endif(OPENSSLCRYPTO_FOUND)
 endif(QTERM_ENABLE_SSH)
+if(KF5WindowSystem_FOUND)
+    add_definitions(-DKWINBLUR_ENABLED)
+    set(optionalSources ${optionalSources}
+    blur.cpp)
+    set(optionalLibs ${optionalLibs} KF5::WindowSystem)
+endif(KF5WindowSystem_FOUND)
 if(QTERM_ENABLE_DBUS)
   if(Qt5DBus_FOUND)
     message(STATUS "QtDBus module found, enable DBus support")
@@ -55,6 +61,13 @@ if(QTERM_ENABLE_DBUS)
     imageconverter.cpp
     dbus.cpp)
     set(optionalLibs ${optionalLibs} Qt5::DBus)
+    if(KF5Wallet_FOUND)
+       message(STATUS "KWallet found, enable KWallet support")
+       add_definitions(-DKWALLET_ENABLED)
+       qt5_add_dbus_interface(optionalSources ${KWALLET_DBUS_INTERFACES_DIR}/kf5_org.kde.KWallet.xml kwallet_interface
+)
+       set(optionalSources ${optionalSources} wallet.cpp)
+    endif(KF5Wallet_FOUND)
   endif(Qt5DBus_FOUND)
 endif(QTERM_ENABLE_DBUS)
 if(QTERM_ENABLE_SCRIPT)
@@ -82,6 +95,11 @@ if(QTERM_ENABLE_QMEDIAPLAYER)
   endif(Qt5Multimedia_FOUND)
 endif(QTERM_ENABLE_QMEDIAPLAYER)
 if(QTERM_ENABLE_PHONON)
+  if(Phonon4Qt5_FOUND)
+     message(STATUS "Phonon module found, enable Phonon support")
+     add_definitions(-DPHONON_ENABLED)
+     set(optionalLibs ${optionalLibs} Phonon::phonon4qt5)
+  endif(Phonon4Qt5_FOUND)
 endif(QTERM_ENABLE_PHONON)
 set(qterm_SRCS
    ui_aboutdialog.h
@@ -151,7 +169,6 @@ set(qterm_SRCS
    pallete.cpp
    chartable.cpp
    charpane.cpp
-   blur.cpp
    ${optionalSources})
 set(qterm_UIS
    ui/aboutdialog.ui

@@ -788,8 +788,10 @@ void Screen::refreshScreen()
 
 void Screen::blurBackground()
 {
+#ifdef KWINBLUR_ENABLED
     if (m_pParam->m_mapParam["opacity"].toInt() < 100)
         BlurHelper().updateBlurRegion(Frame::instance(), Frame::instance()->rect());
+#endif //KWINBLUR_ENABLED
 }
 
 void Screen::paintEvent(QPaintEvent * pe)

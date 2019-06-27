@@ -40,7 +40,7 @@ namespace QTerm
     {}
 
     //! update blur region
-    void updateBlurRegion( const QWidget*, const QRegion& ) const;
+    void updateBlurRegion( QWidget*, const QRegion& ) const;
 
   };
 

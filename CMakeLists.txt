@@ -8,6 +8,7 @@ set(QTERM_VERSION_RELEASE 3)
 set(QTERM_VERSION "${QTERM_VERSION_MAJOR}.${QTERM_VERSION_MINOR}.${QTERM_VERSION_RELEASE}" )
 set(CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake")
 set(QT_MIN_VERSION "5.9.0")
+set(KF5_MIN_VERSION "5.46.0")
 
 set(CMAKE_AUTOMOC ON)
 find_package(Qt5 ${QT_MIN_VERSION} REQUIRED COMPONENTS
@@ -26,6 +27,21 @@ find_package(Qt5 ${QT_MIN_VERSION} REQUIRED COMPONENTS
         Multimedia
     )
 
+find_package (ECM NO_MODULE)
+if(ECM_FOUND)
+    set (CMAKE_MODULE_PATH
+        ${CMAKE_MODULE_PATH}
+        ${ECM_MODULE_PATH}
+        ${ECM_KDE_MODULE_DIR}
+    )
+    include(KDEInstallDirs)
+    include(KDECMakeSettings)
+    find_package (KF5 COMPONENTS
+        Wallet
+        WindowSystem)
+endif(ECM_FOUND)
+
+find_package(Phonon4Qt5)
 
 IF(WIN32 AND MSVC)
     ADD_DEFINITIONS (/D _CRT_SECURE_NO_WARNINGS)

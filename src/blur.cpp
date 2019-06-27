@@ -27,29 +27,18 @@
 
 #include <QWidget>
 
-#ifdef Q_WS_X11
-#include <QtGui/QX11Info>
-#include <X11/Xlib.h>
-#include <X11/Xatom.h>
+#ifdef Q_OS_LINUX
+#include <KWindowEffects>
 #endif
 
 namespace QTerm
 {
 
   //_________________________________________________________________________
-  void BlurHelper::updateBlurRegion( const QWidget* widget, const QRegion& region ) const
+  void BlurHelper::updateBlurRegion( QWidget* widget, const QRegion& region ) const
   {
-#ifdef Q_WS_X11
-    // Atom
-    static Atom atom = XInternAtom( QX11Info::display(), "_KDE_NET_WM_BLUR_BEHIND_REGION", False);
-
-    QVector<unsigned long> data;
-    foreach( const QRect& rect, region.rects() )
-    { data << rect.x() << rect.y() << rect.width() << rect.height(); }
-
-    XChangeProperty(
-      QX11Info::display(), widget->window()->winId(), atom, XA_CARDINAL, 32, PropModeReplace,
-      reinterpret_cast<const unsigned char *>(data.constData()), data.size() );
+#ifdef Q_OS_LINUX
+    KWindowEffects::enableBlurBehind(widget->winId(), true);
 #endif
   }
 

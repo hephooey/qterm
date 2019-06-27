@@ -3,11 +3,7 @@
 #include <QtCore/QProcess>
 
 #ifdef PHONON_ENABLED
-#ifdef OLD_PHONON
-#include <phonon>
-#else
-#include <Phonon/MediaObject>
-#endif
+#include <phonon/MediaObject>
 #endif // PHONON_ENABLED
 
 #ifdef QMEDIAPLAYER_ENABLED
