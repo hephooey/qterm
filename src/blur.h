@@ -25,7 +25,7 @@
     02110-1301  USA.
 */
 
-#include <QtGui/QRegion>
+#include <QRegion>
 class QWidget;
 
 namespace QTerm

@@ -14,7 +14,7 @@
 #include "qterm.h"
 #include <QtDBus>
 #include <QtDebug>
-#include <QtGui/QWidget>
+#include <QWidget>
 namespace QTerm {
 Wallet::Wallet(QObject * parent)
     :m_walletName(),m_handle(0)

@@ -14,11 +14,11 @@
 
 #include "qtermparam.h"
 
-#include <QtCore/QMutex>
-#include <QtCore/QString>
-#include <QtCore/QMap>
-#include <QtCore/QObject>
-#include <QtGui/QImage>
+#include <QMutex>
+#include <QString>
+#include <QMap>
+#include <QObject>
+#include <QImage>
 
 
 namespace QTerm
