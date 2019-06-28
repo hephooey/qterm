@@ -19,6 +19,7 @@
 #include <QMap>
 #include <QObject>
 #include <QImage>
+#include <QDBusServiceWatcher>
 
 
 namespace QTerm
@@ -48,6 +49,7 @@ private:
     bool m_notificationAvailable;
     QList<uint> m_idList;
     QStringList m_serverCapabilities;
+    QDBusServiceWatcher m_serviceWatcher;
 };
 
 }

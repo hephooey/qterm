@@ -38,7 +38,7 @@ DBus * DBus::instance()
 }
 
 DBus::DBus()
-    :m_notificationAvailable(false),m_idList(),m_serverCapabilities()
+    :m_notificationAvailable(false),m_idList(),m_serverCapabilities(),m_serviceWatcher(dbusInterfaceName, QDBusConnection::sessionBus())
 {
     m_idList.clear();
     QDBusConnectionInterface* interface = QDBusConnection::sessionBus().interface();
@@ -50,7 +50,7 @@ DBus::DBus()
     }
 
     // to catch register/unregister events from service in runtime
-    connect(interface, SIGNAL(serviceOwnerChanged(const QString&, const QString&, const QString&)), this, SLOT(slotServiceOwnerChanged(const QString&, const QString&, const QString&)));
+    connect(&m_serviceWatcher, SIGNAL(serviceOwnerChanged(const QString&, const QString&, const QString&)), this, SLOT(slotServiceOwnerChanged(const QString&, const QString&, const QString&)));
 
 }
 
